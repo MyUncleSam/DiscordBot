@@ -9,7 +9,7 @@ RUN dotnet publish -c release -o /app --no-restore
 #--------
 
 FROM mcr.microsoft.com/dotnet/runtime:3.1 AS build
-WORKDIR /opt/bot
+WORKDIR /app
 COPY --from=build /app .
 
 VOLUME ["/opt/bot/config"]
