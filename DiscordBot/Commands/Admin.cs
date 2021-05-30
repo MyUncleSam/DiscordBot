@@ -23,5 +23,14 @@ namespace DiscordBot.Commands
             await context.Client.DisconnectAsync();
             Environment.Exit(0);
         }
+
+        [Command("version")]
+        [Description("shows the current bot version number")]
+        [RequireOwner()]
+        public async Task Version(CommandContext context)
+        {
+            await context.TriggerTypingAsync();
+            await context.RespondAsync($"Version: {Environment.Version.ToString()}");
+        }
     }
 }
