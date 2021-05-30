@@ -98,12 +98,13 @@ namespace DiscordBot
             //this.Commands.RegisterCommands<ExampleExecutableGroup>();
 
             this.Commands.RegisterCommands<Admin>();
+            this.Commands.RegisterCommands<Public>();
 
             this.Client.VoiceStateUpdated += Client_VoiceStateUpdated;
 
-            var cmds = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(w => typeof(ICommands).IsAssignableFrom(w) && !w.IsInterface);
+            //var cmds = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(s => s.GetTypes())
+            //    .Where(w => typeof(ICommands).IsAssignableFrom(w) && !w.IsInterface);
 
             //var test = Activator.CreateInstance(cmds.First().GetType());
 
