@@ -8,9 +8,9 @@ RUN dotnet publish -c release -o /app --no-restore
 
 #--------
 
-FROM mcr.microsoft.com/dotnet/runtime:3.1 AS build
-WORKDIR /app
-COPY --from=build /app .
+FROM mcr.microsoft.com/dotnet/runtime:3.1
+WORKDIR /opt/bot
+COPY --from=build /opt/bot .
 
 VOLUME ["/opt/bot/config"]
 ENTRYPOINT ["dotnet", "DiscordBot.dll"]
