@@ -4,7 +4,7 @@ COPY *.csproj .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c release -o /app --no-restore
+RUN dotnet publish -c release -o /opt/bot --no-restore
 
 #--------
 
