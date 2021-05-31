@@ -144,7 +144,7 @@ namespace DiscordBot
                 text = "Unknown action";
 
             foreach (DiscordChannel chan in chans)
-                await chan.SendMessageAsync(text);
+                await chan.SendMessageAsync($"{chan.Mention}: {text}");
         }
 
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
