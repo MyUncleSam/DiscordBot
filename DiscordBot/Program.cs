@@ -143,6 +143,8 @@ namespace DiscordBot
             else
                 text = "Unknown action";
 
+            sender.Logger.LogInformation(BotEventId, text);
+
             foreach (DiscordChannel chan in chans)
                 await chan.SendMessageAsync($"{chan.Mention}: {text}");
         }
