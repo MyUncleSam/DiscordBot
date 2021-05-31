@@ -133,6 +133,9 @@ namespace DiscordBot
             if (chans.Count() <= 0)
                 return;
 
+            if (e.After?.Channel?.Id == e.Before?.Channel?.Id)
+                return;
+
             string text;
             if (e.After?.Channel == null && e.Before?.Channel != null)
                 text = $"{e.User.Mention} left {e.Before.Channel.Mention}";
