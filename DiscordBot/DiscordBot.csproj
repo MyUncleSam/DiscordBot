@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>Stefan Ruepp</Authors>
     <Company>none</Company>
     <Copyright>(c) Stefan Ruepp 2021</Copyright>
