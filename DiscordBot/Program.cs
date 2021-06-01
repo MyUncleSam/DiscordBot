@@ -157,7 +157,6 @@ namespace DiscordBot
 
             if (string.IsNullOrWhiteSpace(curUser.Username))
             {
-                DiscordUser realUser = null;
                 // in some cases the username is missing (not sent by api) - need to retrieve it using the api
                 // but first check the cache
                 curUser = UserCache.FirstOrDefault(f => f.Id.Equals(curUser.Id));
