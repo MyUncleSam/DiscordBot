@@ -24,6 +24,7 @@ namespace DiscordBot
         public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; set; }
         public ConfigJson Config { get; set; }
+        private List<DiscordUser> UserCache { get; set; }
 
         public static void Main(string[] args)
         {
@@ -35,6 +36,8 @@ namespace DiscordBot
 
         public async Task RunBotAsync()
         {
+            UserCache = new List<DiscordUser>();
+
             System.IO.Directory.CreateDirectory("config");
             if (!System.IO.File.Exists("config/config.json"))
                 System.IO.File.Copy("config.json", "config/config.json");
@@ -150,17 +153,34 @@ namespace DiscordBot
                 return;
 
             string text;
+            DiscordUser curUser = e.User;
+
+            if (string.IsNullOrWhiteSpace(curUser.Username))
+            {
+                DiscordUser realUser = null;
+                // in some cases the username is missing (not sent by api) - need to retrieve it using the api
+                // but first check the cache
+                curUser = UserCache.FirstOrDefault(f => f.Id.Equals(curUser.Id));
+
+                if (curUser == null)
+                {
+                    curUser = e.Guild.GetMemberAsync(e.User.Id).Result;
+                    UserCache.Add(curUser);
+                }
+
+                sender.Logger.LogInformation(BotEventId, $"Looked up user with id {e.User.Id}: {curUser.Username}");
+            }
 
             switch (action)
             {
                 case VoiceJoinEnum.joined:
-                    text = $"'{e.User.Username}' joined '{e.After.Channel.Name}'";
+                    text = $"'{curUser.Username}' joined '{e.After.Channel.Name}'";
                     break;
                 case VoiceJoinEnum.left:
-                    text = $"'{e.User.Username}' left '{e.Before.Channel.Name}'";
+                    text = $"'{curUser.Username}' left '{e.Before.Channel.Name}'";
                     break;
                 case VoiceJoinEnum.moved:
-                    text = $"'{e.User.Username}' moved to '{e.After.Channel.Name}' (from '{e.Before.Channel.Name}')";
+                    text = $"'{curUser.Username}' moved to '{e.After.Channel.Name}' (from '{e.Before.Channel.Name}')";
                     break;
                 default:
                     sender.Logger.LogError(BotEventId, $"unknown voice join enum: '{action.ToString()}'");
