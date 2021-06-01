@@ -154,7 +154,7 @@ namespace DiscordBot
             switch (action)
             {
                 case VoiceJoinEnum.joined:
-                    text = $"{e.User.Username}' joined '{e.After.Channel.Name}'";
+                    text = $"'{e.User.Username}' joined '{e.After.Channel.Name}'";
                     break;
                 case VoiceJoinEnum.left:
                     text = $"'{e.User.Username}' left '{e.Before.Channel.Name}'";
