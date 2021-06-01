@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DiscordBot.Commands;
+using DiscordBot.Enums;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Builders;
@@ -136,17 +137,41 @@ namespace DiscordBot
             if (e.After?.Channel?.Id == e.Before?.Channel?.Id)
                 return;
 
-            string text;
-            if (e.After?.Channel == null && e.Before?.Channel != null)
-                text = $"{e.User.Mention} left {e.Before.Channel.Mention}";
-            else if (e.After?.Channel != null && e.Before?.Channel != null)
-                text = $"{e.User.Mention} moved to {e.After.Channel.Mention} (from {e.Before.Channel.Mention})";
-            else if (e.After?.Channel != null && e.Before?.Channel == null)
-                text = $"{e.User.Mention} joined {e.After.Channel.Mention}";
-            else
-                text = "Unknown action";
+            VoiceJoinEnum action = VoiceJoinEnum.none;
 
-            sender.Logger.LogInformation(BotEventId, text);
+            if (e.After?.Channel == null && e.Before?.Channel != null)
+                action = VoiceJoinEnum.left;
+            else if (e.After?.Channel != null && e.Before?.Channel != null)
+                action = VoiceJoinEnum.moved;
+            else if (e.After?.Channel != null && e.Before?.Channel == null)
+                action = VoiceJoinEnum.joined;
+
+            if(action == VoiceJoinEnum.none)
+                return;
+
+            string text;
+            string logText;
+
+            switch (action)
+            {
+                case VoiceJoinEnum.joined:
+                    text = $"{e.User.Mention} joined {e.After.Channel.Mention}";
+                    logText = $"{e.User.Username} joined {e.After.Channel.Name}";
+                    break;
+                case VoiceJoinEnum.left:
+                    text = $"{e.User.Mention} left {e.Before.Channel.Mention}";
+                    logText = $"{e.User.Username} left {e.Before.Channel.Name}";
+                    break;
+                case VoiceJoinEnum.moved:
+                    text = $"{e.User.Mention} moved to {e.After.Channel.Mention} (from {e.Before.Channel.Mention})";
+                    logText = $"{e.User.Username} moved to {e.After.Channel.Name} (from {e.Before.Channel.Name})";
+                    break;
+                default:
+                    sender.Logger.LogError(BotEventId, $"unknown voice join enum: '{action.ToString()}'");
+                    return;
+            }
+
+            sender.Logger.LogInformation(BotEventId, logText);
 
             foreach (DiscordChannel chan in chans)
                 await chan.SendMessageAsync($"{chan.Mention}: {text}");

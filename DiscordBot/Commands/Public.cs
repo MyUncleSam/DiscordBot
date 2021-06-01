@@ -13,6 +13,7 @@ namespace DiscordBot.Commands
         [Command("ping")]
         [Description("checks the bot ping to the discord server")]
         [Aliases("pong")]
+        [RequireDirectMessage()]
         public async Task Ping(CommandContext context)
         {
             await context.TriggerTypingAsync();
