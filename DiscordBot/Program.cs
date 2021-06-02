@@ -103,6 +103,8 @@ namespace DiscordBot
 
             this.Commands.RegisterCommands<Admin>();
             this.Commands.RegisterCommands<Public>();
+            this.Commands.RegisterCommands<Messages>();
+            this.Commands.RegisterCommands<Roles>();
 
             this.Client.VoiceStateUpdated += Client_VoiceStateUpdated;
 

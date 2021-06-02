@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +32,24 @@ namespace DiscordBot.Commands
         {
             await context.TriggerTypingAsync();
             await context.RespondAsync($"Version: {Environment.Version.ToString()}");
+        }
+
+        [Command("play")]
+        [Description("changes the information what the bot is playing")]
+        [Aliases("activity")]
+        [RequireOwner()]
+        [RequireGuild()]
+        public async Task Play(CommandContext context,[Description("name of the game the bot should play")] params string[] game)
+        {
+            await context.TriggerTypingAsync();
+
+            await context.Client.UpdateStatusAsync(new DiscordActivity(string.Join(" ", game)));
+
+            var doneMsg = context.RespondAsync("Done");
+            await doneMsg;
+
+            System.Threading.Thread.Sleep(2000);
+            await context.Channel.DeleteMessagesAsync(new List<DiscordMessage>() { doneMsg.Result, context.Message });
         }
     }
 }
