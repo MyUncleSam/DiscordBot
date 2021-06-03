@@ -191,7 +191,7 @@ namespace DiscordBot
             sender.Logger.LogInformation(BotEventId, text);
 
             foreach (DiscordChannel chan in chans)
-                await chan.SendMessageAsync($"{chan.Name}: {text}");
+                await chan.SendMessageAsync($"{chan.Mention}: {text}");
         }
 
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
