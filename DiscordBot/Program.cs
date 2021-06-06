@@ -183,7 +183,7 @@ namespace DiscordBot
             else if (e.After?.Channel != null && e.Before?.Channel == null)
                 action = VoiceJoinEnum.joined;
 
-            if(action == VoiceJoinEnum.none)
+            if(action == VoiceJoinEnum.none || action == VoiceJoinEnum.moved)
                 return;
 
             string text;
