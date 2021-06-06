@@ -128,7 +128,7 @@ namespace DiscordBot
             // command.
 
             // start the timer for auto removal of old notification elements
-            VoiceTimer = new Timer(60 * 1000); // check every minute
+            VoiceTimer = new Timer(30 * 60 * 1000); // check for not deleted messages (should be deleted directly - so just for security reasons)
             VoiceTimer.Elapsed += VoiceTimer_Elapsed;
             VoiceTimer.Enabled = true;
             VoiceTimer.AutoReset = true;
@@ -185,7 +185,7 @@ namespace DiscordBot
             else if (e.After?.Channel != null && e.Before?.Channel == null)
                 action = VoiceJoinEnum.joined;
 
-            if(action == VoiceJoinEnum.none || action == VoiceJoinEnum.moved)
+            if(action == VoiceJoinEnum.none)
                 return;
 
             string text;
@@ -218,7 +218,13 @@ namespace DiscordBot
             sender.Logger.LogInformation(BotEventId, text);
 
             foreach (DiscordChannel chan in chans)
-                await chan.SendMessageAsync($"{chan.Mention}: {text}");
+                await DeleteVoiceNotification(chan.SendMessageAsync($"{chan.Mention}: {text}").Result);
+        }
+
+        private async Task DeleteVoiceNotification(DiscordMessage message)
+        {
+            await Task.Delay(Config.DeleteVoiceMessageAfterMinutes * 60 * 1000);
+            await message.DeleteAsync();
         }
 
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
