@@ -218,12 +218,16 @@ namespace DiscordBot
             sender.Logger.LogInformation(BotEventId, text);
 
             foreach (DiscordChannel chan in chans)
-                await DeleteVoiceNotification(chan.SendMessageAsync($"{chan.Mention}: {text}").Result);
+            {
+                var done = await chan.SendMessageAsync($"{chan.Mention}: {text}");
+                var delLater = DeleteVoiceNotification(done);
+            }
         }
 
-        private async Task DeleteVoiceNotification(DiscordMessage message)
+        public async Task DeleteVoiceNotification(DiscordMessage message)
         {
             await Task.Delay(Config.DeleteVoiceMessageAfterMinutes * 60 * 1000);
+            //System.Threading.Thread.Sleep(99999999);
             await message.DeleteAsync();
         }
 
