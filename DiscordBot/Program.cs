@@ -142,8 +142,11 @@ namespace DiscordBot
             if (Config.DeleteVoiceMessageAfterMinutes <= 0)
                 return;
 
+            Client.Logger.LogInformation(BotEventId, "Checking for old voice notification entries...");
+
             foreach (DiscordGuild guild in Client.Guilds.Values)
             {
+                Client.Logger.LogInformation(BotEventId, $"\tGuild: {guild.Name} ({guild.Id})");
                 var chans = guild.Channels.Select(s => s.Value).Where(w => w.Type == ChannelType.Text && w.Name.Equals(Config.NotifyChannelName, StringComparison.OrdinalIgnoreCase));
                 if (chans.Count() <= 0)
                     continue;
@@ -156,10 +159,9 @@ namespace DiscordBot
                     var msgsOlder = msgs.Where(w => w.Timestamp.DateTime <= deleteOlderThan);
 
                     if (msgsOlder.Count() > 0)
-                    {
-                        Client.Logger.LogInformation(BotEventId, $"Found {msgsOlder.Count()} messages which are older than {deleteOlderThan} - deleting them");
                         chan.DeleteMessagesAsync(msgsOlder);
-                    }
+
+                    Client.Logger.LogInformation(BotEventId, $"\t\t- #{chan.Name} ({chan.Id}): Deleting {msgsOlder.Count()} of {msgs.Count} messages");
                 }
             }
         }
