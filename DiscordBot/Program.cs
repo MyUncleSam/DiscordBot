@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using DiscordBot.Commands;
 using DiscordBot.Enums;
 using DSharpPlus;
@@ -24,7 +25,7 @@ namespace DiscordBot
         public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; set; }
         public ConfigJson Config { get; set; }
-        private List<DiscordUser> UserCache { get; set; }
+        private Timer VoiceTimer { get; set; }
 
         public static void Main(string[] args)
         {
@@ -36,8 +37,6 @@ namespace DiscordBot
 
         public async Task RunBotAsync()
         {
-            UserCache = new List<DiscordUser>();
-
             System.IO.Directory.CreateDirectory("config");
             if (!System.IO.File.Exists("config/config.json"))
                 System.IO.File.Copy("config.json", "config/config.json");
@@ -128,8 +127,41 @@ namespace DiscordBot
             // <prefix>help <command> to see help about specific
             // command.
 
+            // start the timer for auto removal of old notification elements
+            VoiceTimer = new Timer(60 * 1000); // check every minute
+            VoiceTimer.Elapsed += VoiceTimer_Elapsed;
+            VoiceTimer.Enabled = true;
+            VoiceTimer.AutoReset = true;
+
             // and this is to prevent premature quitting
             await Task.Delay(-1);
+        }
+
+        private void VoiceTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (Config.DeleteVoiceMessageAfterMinutes <= 0)
+                return;
+
+            foreach (DiscordGuild guild in Client.Guilds.Values)
+            {
+                var chans = guild.Channels.Select(s => s.Value).Where(w => w.Type == ChannelType.Text && w.Name.Equals(Config.NotifyChannelName, StringComparison.OrdinalIgnoreCase));
+                if (chans.Count() <= 0)
+                    continue;
+
+                // get last 50 messages from this channel, check if sent date is older than provided date and if so - delete them
+                DateTime deleteOlderThan = DateTime.Now.AddMinutes(Config.DeleteVoiceMessageAfterMinutes * -1);
+                foreach (DiscordChannel chan in chans)
+                {
+                    var msgs = chan.GetMessagesAsync(50).Result;
+                    var msgsOlder = msgs.Where(w => w.Timestamp.DateTime <= deleteOlderThan);
+
+                    if (msgsOlder.Count() > 0)
+                    {
+                        Client.Logger.LogInformation(BotEventId, $"Found {msgsOlder.Count()} messages which are older than {deleteOlderThan} - deleting them");
+                        chan.DeleteMessagesAsync(msgsOlder);
+                    }
+                }
+            }
         }
 
         private async Task Client_VoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs e)
@@ -161,14 +193,7 @@ namespace DiscordBot
             {
                 // in some cases the username is missing (not sent by api) - need to retrieve it using the api
                 // but first check the cache
-                curUser = UserCache.FirstOrDefault(f => f.Id.Equals(curUser.Id));
-
-                if (curUser == null)
-                {
-                    curUser = e.Guild.GetMemberAsync(e.User.Id).Result;
-                    UserCache.Add(curUser);
-                }
-
+                curUser = e.Guild.GetMemberAsync(e.User.Id).Result; // DSharpPlus already caches, so no custom cache needed
                 sender.Logger.LogInformation(BotEventId, $"Looked up user with id {e.User.Id}: {curUser.Username}");
             }
 
@@ -277,5 +302,8 @@ namespace DiscordBot
 
         [JsonProperty("notify_channelname")]
         public string NotifyChannelName { get; set; }
+
+        [JsonProperty("delete_voice_message_after_minutes")]
+        public int DeleteVoiceMessageAfterMinutes { get; set; }
     }
 }

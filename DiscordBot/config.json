@@ -1,5 +1,6 @@
 {
   "token": "",
   "prefix": "?",
-  "notify_channelname": "notify_channel"
+  "notify_channelname": "notify_channel",
+  "delete_voice_message_after_minutes": 15
 }
