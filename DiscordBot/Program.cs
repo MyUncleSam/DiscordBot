@@ -151,11 +151,11 @@ namespace DiscordBot
                 if (chans.Count() <= 0)
                     continue;
 
-                // get last 50 messages from this channel, check if sent date is older than provided date and if so - delete them
+                // get last 10 messages from this channel, check if sent date is older than provided date and if so - delete them
                 DateTime deleteOlderThan = DateTime.Now.AddMinutes(Config.DeleteVoiceMessageAfterMinutes * -1);
                 foreach (DiscordChannel chan in chans)
                 {
-                    var msgs = chan.GetMessagesAsync(50).Result;
+                    var msgs = chan.GetMessagesAsync(10).Result;
                     var msgsOlder = msgs.Where(w => w.Timestamp.DateTime <= deleteOlderThan);
 
                     if (msgsOlder.Count() > 0)
