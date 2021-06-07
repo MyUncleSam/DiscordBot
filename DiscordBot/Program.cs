@@ -228,6 +228,14 @@ namespace DiscordBot
         {
             await Task.Delay(Config.DeleteVoiceMessageAfterMinutes * 60 * 1000);
             //System.Threading.Thread.Sleep(99999999);
+            try
+            {
+                Client.Logger.LogInformation(BotEventId, $"Deleting message {message.Id}: '{message.Content}'");
+            }
+            catch
+            {
+                Client.Logger.LogInformation(BotEventId, $"Deleting message <unknown>");
+            }
             await message.DeleteAsync();
         }
 
