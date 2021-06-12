@@ -96,10 +96,6 @@ namespace DiscordBot
             //Commands.RegisterUserFriendlyTypeName<MathOperation>("operation");
 
             //// up next, let's register our commands
-            //this.Commands.RegisterCommands<ExampleUngrouppedCommands>();
-            //this.Commands.RegisterCommands<ExampleGrouppedCommands>();
-            //this.Commands.RegisterCommands<ExampleExecutableGroup>();
-
             this.Commands.RegisterCommands<Admin>();
             this.Commands.RegisterCommands<Public>();
             this.Commands.RegisterCommands<Messages>();
