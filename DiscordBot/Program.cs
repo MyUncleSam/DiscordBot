@@ -84,8 +84,7 @@ namespace DiscordBot
             // and hook them up
             this.Commands = this.Client.UseCommandsNext(ccfg);
 
-            // let's hook some command events, so we know what's 
-            // going on
+            // let's hook some command events, so we know what's going on
             this.Commands.CommandExecuted += this.Commands_CommandExecuted;
             this.Commands.CommandErrored += this.Commands_CommandErrored;
 
