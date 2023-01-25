@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace DiscordBot.Commands
         public async Task Version(CommandContext context)
         {
             await context.TriggerTypingAsync();
-            await context.RespondAsync($"Version: {Environment.Version.ToString()}");
+            await context.RespondAsync($"Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
         [Command("play")]
