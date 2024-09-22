@@ -19,10 +19,6 @@ namespace DiscordBot.Commands
             await context.TriggerTypingAsync();
             var emoji = DiscordEmoji.FromName(context.Client, ":ping_pong:");
             var message = await context.RespondAsync($"{emoji} Pong! Ping: {context.Client.Ping}ms");
-
-            await Task.Delay(10000);
-            await message.DeleteAsync();
-            await context.Message.DeleteAsync();
         }
 
         [Command("time")]
@@ -34,10 +30,6 @@ namespace DiscordBot.Commands
             await context.TriggerTypingAsync();
             var emoji = DiscordEmoji.FromName(context.Client, ":timer:");
             var message = await context.RespondAsync($"{emoji} Servertime: {DateTime.Now} (UTC: {DateTime.UtcNow})");
-
-            await Task.Delay(10000);
-            await message.DeleteAsync();
-            await context.Message.DeleteAsync();
         }
 
 
@@ -53,10 +45,6 @@ namespace DiscordBot.Commands
             var author = context.Message.Author;
 
             var message = await context.RespondAsync($"{emoji} {author.Username} {author.Id} {author.IsBot} {author.IsSystem}");
-
-            await Task.Delay(10000);
-            await message.DeleteAsync();
-            await context.Message.DeleteAsync();
         }
     }
 }
