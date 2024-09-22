@@ -1,8 +1,8 @@
 properties(
     [
         githubProjectProperty(
-            displayName: 'DiscordBot',
-            projectUrlStr: 'https://github.com/MyUncleSam/DiscordBot/'
+            displayName: 'discord-bot',
+            projectUrlStr: 'https://github.com/ruepp-jenkins/discord-bot/'
         ),
         disableConcurrentBuilds()
     ]
@@ -14,7 +14,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_FULLNAME = 'ruepp/discordbot'
+        IMAGE_FULLNAME = 'ruepp/discord-bot'
         DOCKER_API_PASSWORD = credentials('DOCKER_API_PASSWORD')
     }
 
