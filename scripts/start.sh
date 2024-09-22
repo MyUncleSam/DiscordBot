@@ -11,20 +11,18 @@ if [ -z "${VERSION}" ]; then
 fi
 
 cd source/DiscordBot
-echo "Building docker image from remote Dockerfile for version ${VERSION}"
 
 # run build
 echo "[${BRANCH_NAME}] Building images: ${IMAGE_FULLNAME}"
 if [ "$BRANCH_NAME" = "master" ] || [ "$BRANCH_NAME" = "main" ]
 then
     docker build \
-        -t ${IMAGE_FULLNAME}:${VERSION} \
         -t ${IMAGE_FULLNAME}:latest \
         -f Dockerfile \
         --push .
 else
     docker build \
-        -t ${IMAGE_FULLNAME}-test:${BRANCH_NAME}-${VERSION} \
+        -t ${IMAGE_FULLNAME}-test:${BRANCH_NAME} \
         -f Dockerfile \
         --push .
 fi
