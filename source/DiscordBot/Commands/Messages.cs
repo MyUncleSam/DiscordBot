@@ -1,10 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
@@ -22,17 +17,13 @@ namespace DiscordBot.Commands
             string message = context.Message.Content.ToString();
             await context.Message.DeleteAsync();
 
-            var msgTask = context.Channel.GetMessagesAsync(numberOfLines);
-            await msgTask;
+            var msgTask = await context.Channel.GetMessagesAsync(numberOfLines);
+            await context.Channel.DeleteMessagesAsync(msgTask);
 
-            var msgs = msgTask.Result;
-            await context.Channel.DeleteMessagesAsync(msgs);
+            var doneMsg = await context.RespondAsync("Done.");
 
-            var doneMsg = context.RespondAsync("Done.");
-            await doneMsg;
-
-            System.Threading.Thread.Sleep(2000);
-            await doneMsg.Result.DeleteAsync();
+            await Task.Delay(2000);
+            await doneMsg.DeleteAsync();
         }
     }
 }

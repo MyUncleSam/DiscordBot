@@ -2,9 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
@@ -14,7 +12,7 @@ namespace DiscordBot.Commands
         [Command("addgroup")]
         [Description("Adds a group to the given user")]
         [Aliases("ag", "addrole", "ar")]
-        [RequireOwner()]
+        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
         [RequireGuild()]
         public async Task AddGroup(CommandContext context, [Description("the user to add the new group")] DiscordMember user, [Description("the role to add")] DiscordRole role)
         {
@@ -31,7 +29,7 @@ namespace DiscordBot.Commands
         [Command("addfriend")]
         [Description("Adds the friend permission for the given user")]
         [Aliases("af", "friend")]
-        [RequireOwner()]
+        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
         [RequireGuild()]
         public async Task AddGroup(CommandContext context, [Description("the user to add to the friends list")] DiscordMember user)
         {

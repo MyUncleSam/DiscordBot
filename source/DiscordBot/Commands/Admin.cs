@@ -4,7 +4,6 @@ using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
@@ -13,7 +12,8 @@ namespace DiscordBot.Commands
     {
         [Command("shutdown")]
         [Description("stops the bot")]
-        [RequireOwner()]
+        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
+        [RequireDirectMessage()]
         public async Task Shutdown(CommandContext context)
         {
             await context.TriggerTypingAsync();
@@ -28,17 +28,21 @@ namespace DiscordBot.Commands
 
         [Command("version")]
         [Description("shows the current bot version number")]
-        [RequireOwner()]
+        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
+        [RequireDirectMessage()]
         public async Task Version(CommandContext context)
         {
             await context.TriggerTypingAsync();
-            await context.RespondAsync($"Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+            var message = await context.RespondAsync($"Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+
+            await Task.Delay(5000);
+            await context.Message.DeleteAsync();
         }
 
         [Command("play")]
         [Description("changes the information what the bot is playing")]
         [Aliases("activity")]
-        [RequireOwner()]
+        [RequireUserPermissions(DSharpPlus.Permissions.Administrator)]
         [RequireGuild()]
         public async Task Play(CommandContext context,[Description("name of the game the bot should play")] params string[] game)
         {
