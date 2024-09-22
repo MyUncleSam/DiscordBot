@@ -17,15 +17,13 @@ echo "Building docker image from remote Dockerfile for version ${VERSION}"
 echo "[${BRANCH_NAME}] Building images: ${IMAGE_FULLNAME}"
 if [ "$BRANCH_NAME" = "master" ] || [ "$BRANCH_NAME" = "main" ]
 then
-    docker buildx build \
-        --platform linux/amd64,linux/arm64 \
+    docker build \
         -t ${IMAGE_FULLNAME}:${VERSION} \
         -t ${IMAGE_FULLNAME}:latest \
         -f Dockerfile \
         --push .
 else
-    docker buildx build \
-        --platform linux/amd64,linux/arm64 \
+    docker build \
         -t ${IMAGE_FULLNAME}-test:${BRANCH_NAME}-${VERSION} \
         -f Dockerfile \
         --push .
