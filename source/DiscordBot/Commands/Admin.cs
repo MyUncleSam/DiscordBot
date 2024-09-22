@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
 {
-    [RequireOwner]
     public class Admin : BaseCommandModule
     {
         [Command("shutdown")]
         [Description("stops the bot")]
+        [RequireOwner()]
         [RequireDirectMessage()]
         public async Task Shutdown(CommandContext context)
         {
@@ -28,6 +28,7 @@ namespace DiscordBot.Commands
 
         [Command("version")]
         [Description("shows the current bot version number")]
+        [RequireOwner()]
         [RequireDirectMessage()]
         public async Task Version(CommandContext context)
         {
@@ -41,6 +42,7 @@ namespace DiscordBot.Commands
         [Command("play")]
         [Description("changes the information what the bot is playing")]
         [Aliases("activity")]
+        [RequireOwner()]
         [RequireGuild()]
         public async Task Play(CommandContext context,[Description("name of the game the bot should play")] params string[] game)
         {
